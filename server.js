@@ -1,22 +1,34 @@
 const inquirer = require("inquirer");
-let Database = require("./asyncDb");
+let Database = require("./db_constructor");
 let consoleTable = require("console.table");
 
 const db = new Database({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "Shifting Shadows",
-    database: "cms"
-  });
+    password: "M4ssms3ff3ct!",
+    database: "employeeTables"
+});
 
+async function viewAllDepartments() {
+    let query = "SELECT * FROM department";
+    const rows = await db.query(query);
+    console.table(rows);
+}
 
-  async function main() {
+async function viewAllEmployees() {
+    console.log("");
+    let query = "SELECT * FROM employee";
+    const rows = await db.query(query);
+    console.table(rows);
+}
+
+async function main() {
     let exitLoop = false;
-    while(!exitLoop) {
+    while (!exitLoop) {
         const prompt = await mainPrompt();
 
-        switch(prompt.action) {
+        switch (prompt.action) {
             case 'Add department': {
                 const newDepartmentName = await getDepartmentInfo();
                 await addDepartment(newDepartmentName);
@@ -43,7 +55,7 @@ const db = new Database({
                 await removeEmployee(employee);
                 break;
             }
-            
+
             case 'Update employee role': {
                 const employee = await getUpdateEmployeeRoleInfo();
                 await updateEmployeeRole(employee);
@@ -83,25 +95,23 @@ const db = new Database({
 
 async function mainPrompt() {
     return inquirer
-        .prompt([
-            {
-                type: "list",
-                message: "What would you like to do?",
-                name: "action",
-                choices: [
-                  "Add department",
-                  "Add employee",
-                  "Add role",
-                  "Remove employee",
-                  "Update employee role",
-                  "View all departments",
-                  "View all employees",
-                  "View all employees by department",
-                  "View all roles",
-                  "Exit"
-                ]
-            }
-        ])
+        .prompt([{
+            type: "list",
+            message: "What would you like to do?",
+            name: "action",
+            choices: [
+                "Add department",
+                "Add employee",
+                "Add role",
+                "Remove employee",
+                "Update employee role",
+                "View all departments",
+                "View all employees",
+                "View all employees by department",
+                "View all roles",
+                "Exit"
+            ]
+        }])
 };
 
-main(); 
+main();
