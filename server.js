@@ -10,15 +10,27 @@ const db = new Database({
     database: "employeeTables"
 });
 
+async function viewAllEmployees() {
+    let query = "SELECT * FROM employee";
+    const rows = await db.query(query);
+    console.table(rows);
+}
+
 async function viewAllDepartments() {
     let query = "SELECT * FROM department";
     const rows = await db.query(query);
     console.table(rows);
 }
 
-async function viewAllEmployees() {
-    console.log("");
-    let query = "SELECT * FROM employee";
+async function viewAllRoles() {
+    let query = "SELECT * FROM role";
+    const rows = await db.query(query);
+    console.table(rows);
+    return rows;
+}
+
+async function viewAllEmployeesByDepartment() {
+    let query = "SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);";
     const rows = await db.query(query);
     console.table(rows);
 }
@@ -29,6 +41,26 @@ async function main() {
         const prompt = await mainPrompt();
 
         switch (prompt.action) {
+            case 'View all employees': {
+                await viewAllEmployees();
+                break;
+            }
+
+            case 'View all departments': {
+                await viewAllDepartments();
+                break;
+            }
+
+            case 'View all employees by department': {
+                await viewAllEmployeesByDepartment();
+                break;
+            }
+
+            case 'View all roles': {
+                await viewAllRoles();
+                break;
+            }
+
             case 'Add department': {
                 const newDepartmentName = await getDepartmentInfo();
                 await addDepartment(newDepartmentName);
@@ -37,7 +69,6 @@ async function main() {
 
             case 'Add employee': {
                 const newEmployee = await getAddEmployeeInfo();
-                console.log("add an employee");
                 console.log(newEmployee);
                 await addEmployee(newEmployee);
                 break;
@@ -45,7 +76,6 @@ async function main() {
 
             case 'Add role': {
                 const newRole = await getRoleInfo();
-                console.log("add a role");
                 await addRole(newRole);
                 break;
             }
@@ -59,26 +89,6 @@ async function main() {
             case 'Update employee role': {
                 const employee = await getUpdateEmployeeRoleInfo();
                 await updateEmployeeRole(employee);
-                break;
-            }
-
-            case 'View all departments': {
-                await viewAllDepartments();
-                break;
-            }
-
-            case 'View all employees': {
-                await viewAllEmployees();
-                break;
-            }
-
-            case 'View all employees by department': {
-                await viewAllEmployeesByDepartment();
-                break;
-            }
-
-            case 'View all roles': {
-                await viewAllRoles();
                 break;
             }
 
@@ -100,15 +110,14 @@ async function mainPrompt() {
             message: "What would you like to do?",
             name: "action",
             choices: [
-                "Add department",
+                "View all employees",
+                "View all departments",
+                "View all employees by department",
+                "View all roles", "Add department",
                 "Add employee",
                 "Add role",
                 "Remove employee",
                 "Update employee role",
-                "View all departments",
-                "View all employees",
-                "View all employees by department",
-                "View all roles",
                 "Exit"
             ]
         }])
