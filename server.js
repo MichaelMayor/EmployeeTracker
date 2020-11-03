@@ -78,6 +78,17 @@ async function getEmployeeId(fullName) {
     return rows[0].id;
 }
 
+async function getEmployeeNames() {
+    let query = "SELECT * FROM employee";
+
+    const rows = await db.query(query);
+    let employeeNames = [];
+    for(const employee of rows) {
+        employeeNames.push(employee.first_name + " " + employee.last_name);
+    }
+    return employeeNames;
+}
+
 async function getManagerNames() {
     let query = "SELECT * FROM employee WHERE manager_id IS NULL";
     const rows = await db.query(query);
@@ -106,6 +117,16 @@ async function getDepartmentNames() {
         departments.push(row.name);
     }
     return departments;
+}
+
+async function updateEmployeeRole(employeeInfo) {
+    const roleId = await getRoleId(employeeInfo.role);
+    const employee = employeeInfo.employeeName.split(" ");
+
+    let query = 'UPDATE employee SET role_id=? WHERE employee.first_name=? AND employee.last_name=?';
+    let args=[roleId, employee[0], employee[1]];
+    const rows = await db.query(query, args);
+    console.log(`Updated employee ${employee[0]} ${employee[1]} with role ${employeeInfo.role}`);
 }
 
 async function main() {
