@@ -145,12 +145,10 @@ async function mainPrompt() {
             choices: [
                 "View all employees",
                 "View all departments",
-                "View all employees by department",
                 "View all roles",
                 "Add department",
                 "Add employee",
                 "Add role",
-                "Remove employee",
                 "Update employee role",
                 "Exit"
             ]
