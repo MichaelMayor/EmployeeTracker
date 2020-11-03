@@ -73,27 +73,10 @@ async function getRoleId(roleName) {
 async function getEmployeeId(fullName) {
     const employee = fullName.split(" ");
     let query = 'SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name=?';
-    let args=[employee[0], employee[1]];
+    let args = [employee[0], employee[1]];
     const rows = await db.query(query, args);
     return rows[0].id;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 async function main() {
