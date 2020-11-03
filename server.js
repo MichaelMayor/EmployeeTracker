@@ -78,6 +78,35 @@ async function getEmployeeId(fullName) {
     return rows[0].id;
 }
 
+async function getManagerNames() {
+    let query = "SELECT * FROM employee WHERE manager_id IS NULL";
+    const rows = await db.query(query);
+    let employeeNames = [];
+    for (const employee of rows) {
+        employeeNames.push(employee.first_name + " " + employee.last_name);
+    }
+    return employeeNames;
+}
+
+async function getRoles() {
+    let query = "SELECT title FROM role";
+    const rows = await db.query(query);
+    let roles = [];
+    for (const row of rows) {
+        roles.push(row.title);
+    }
+    return roles;
+}
+
+async function getDepartmentNames() {
+    let query = "SELECT name FROM department";
+    const rows = await db.query(query);
+    let departments = [];
+    for (const row of rows) {
+        departments.push(row.name);
+    }
+    return departments;
+}
 
 async function main() {
     let exitLoop = false;
@@ -159,8 +188,7 @@ async function getAddEmployeeInfo() {
     const managers = await getManagerNames();
     const roles = await getRoles();
     return inquirer
-        .prompt([
-            {
+        .prompt([{
                 type: "input",
                 name: "first_name",
                 message: "What is the employee's first name?"
@@ -191,46 +219,42 @@ async function getAddEmployeeInfo() {
 
 async function getDepartmentInfo() {
     return inquirer
-    .prompt([
-        {
+        .prompt([{
             type: "input",
             message: "What is the name of the new department?",
             name: "departmentName"
-        }
-    ])
+        }])
 }
 
 async function getRoleInfo() {
     const departments = await getDepartmentNames();
     return inquirer
-    .prompt([
-        {
-            type: "input",
-            message: "What is the title of the new role?",
-            name: "roleName"
-        },
-        {
-            type: "input",
-            message: "What is the salary of the new role?",
-            name: "salary"
-        },
-        {
-            type: "list",
-            message: "Which department uses this role?",
-            name: "departmentName",
-            choices: [
-                ...departments
-            ]
-        }
-    ])
+        .prompt([{
+                type: "input",
+                message: "What is the title of the new role?",
+                name: "roleName"
+            },
+            {
+                type: "input",
+                message: "What is the salary of the new role?",
+                name: "salary"
+            },
+            {
+                type: "list",
+                message: "Which department uses this role?",
+                name: "departmentName",
+                choices: [
+                    ...departments
+                ]
+            }
+        ])
 }
 
 async function getUpdateEmployeeRoleInfo() {
     const employees = await getEmployeeNames();
     const roles = await getRoles();
     return inquirer
-        .prompt([
-            {
+        .prompt([{
                 type: "list",
                 message: "Which employee do you want to update?",
                 name: "employeeName",
