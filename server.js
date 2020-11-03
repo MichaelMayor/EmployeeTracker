@@ -35,6 +35,54 @@ async function viewAllEmployeesByDepartment() {
     console.table(rows);
 }
 
+async function addEmployee(employeeInfo) {
+    let roleId = await getRoleId(employeeInfo.role);
+    let managerId = await getEmployeeId(employeeInfo.manager);
+
+    // INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Hope", 8, 5);
+    let query = "INSERT into employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
+    let args = [employeeInfo.first_name, employeeInfo.last_name, roleId, managerId];
+    const rows = await db.query(query, args);
+    console.log(`Added employee ${employeeInfo.first_name} ${employeeInfo.last_name}.`);
+}
+
+async function addDepartment(departmentInfo) {
+    const departmentName = departmentInfo.departmentName;
+    let query = 'INSERT into department (name) VALUES (?)';
+    let args = [departmentName];
+    const rows = await db.query(query, args);
+    console.log(`Added department named ${departmentName}`);
+}
+
+async function addRole(roleInfo) {
+    const departmentId = await getDepartmentId(roleInfo.departmentName);
+    const salary = roleInfo.salary;
+    const title = roleInfo.roleName;
+    let query = 'INSERT into role (title, salary, department_id) VALUES (?,?,?)';
+    let args = [title, salary, departmentId];
+    const rows = await db.query(query, args);
+    console.log(`Added role ${title}`);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 async function main() {
     let exitLoop = false;
     while (!exitLoop) {
@@ -61,16 +109,16 @@ async function main() {
                 break;
             }
 
-            case 'Add department': {
-                const newDepartmentName = await getDepartmentInfo();
-                await addDepartment(newDepartmentName);
-                break;
-            }
-
             case 'Add employee': {
                 const newEmployee = await getAddEmployeeInfo();
                 console.log(newEmployee);
                 await addEmployee(newEmployee);
+                break;
+            }
+
+            case 'Add department': {
+                const newDepartmentName = await getDepartmentInfo();
+                await addDepartment(newDepartmentName);
                 break;
             }
 
@@ -113,7 +161,8 @@ async function mainPrompt() {
                 "View all employees",
                 "View all departments",
                 "View all employees by department",
-                "View all roles", "Add department",
+                "View all roles", 
+                "Add department",
                 "Add employee",
                 "Add role",
                 "Remove employee",
