@@ -56,6 +56,27 @@ async function addRole(roleInfo) {
     console.log(`Added role ${title}`);
 }
 
+async function getDepartmentId(departmentName) {
+    let query = "SELECT * FROM department WHERE department.name=?";
+    let args = [departmentName];
+    const rows = await db.query(query, args);
+    return rows[0].id;
+}
+
+async function getRoleId(roleName) {
+    let query = "SELECT * FROM role WHERE role.title=?";
+    let args = [roleName];
+    const rows = await db.query(query, args);
+    return rows[0].id;
+}
+
+async function getEmployeeId(fullName) {
+    const employee = fullName.split(" ");
+    let query = 'SELECT id FROM employee WHERE employee.first_name=? AND employee.last_name=?';
+    let args=[employee[0], employee[1]];
+    const rows = await db.query(query, args);
+    return rows[0].id;
+}
 
 
 
