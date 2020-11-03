@@ -79,6 +79,29 @@ const db = new Database({
                 console.log(`Error. Action was ${prompt.action}`);
         }
     }
-}
+};
+
+async function mainPrompt() {
+    return inquirer
+        .prompt([
+            {
+                type: "list",
+                message: "What would you like to do?",
+                name: "action",
+                choices: [
+                  "Add department",
+                  "Add employee",
+                  "Add role",
+                  "Remove employee",
+                  "Update employee role",
+                  "View all departments",
+                  "View all employees",
+                  "View all employees by department",
+                  "View all roles",
+                  "Exit"
+                ]
+            }
+        ])
+};
 
 main(); 
