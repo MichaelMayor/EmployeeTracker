@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-let Database = require("./async-db");
+let Database = require("./asyncDb");
 let consoleTable = require("console.table");
 
 const db = new Database({
