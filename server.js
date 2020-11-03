@@ -29,17 +29,9 @@ async function viewAllRoles() {
     return rows;
 }
 
-async function viewAllEmployeesByDepartment() {
-    let query = "SELECT first_name, last_name, department.name FROM ((employee INNER JOIN role ON role_id = role.id) INNER JOIN department ON department_id = department.id);";
-    const rows = await db.query(query);
-    console.table(rows);
-}
-
 async function addEmployee(employeeInfo) {
     let roleId = await getRoleId(employeeInfo.role);
     let managerId = await getEmployeeId(employeeInfo.manager);
-
-    // INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("Bob", "Hope", 8, 5);
     let query = "INSERT into employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)";
     let args = [employeeInfo.first_name, employeeInfo.last_name, roleId, managerId];
     const rows = await db.query(query, args);
@@ -99,11 +91,6 @@ async function main() {
                 break;
             }
 
-            case 'View all employees by department': {
-                await viewAllEmployeesByDepartment();
-                break;
-            }
-
             case 'View all roles': {
                 await viewAllRoles();
                 break;
@@ -125,12 +112,6 @@ async function main() {
             case 'Add role': {
                 const newRole = await getRoleInfo();
                 await addRole(newRole);
-                break;
-            }
-
-            case 'Remove employee': {
-                const employee = await getRemoveEmployeeInfo();
-                await removeEmployee(employee);
                 break;
             }
 
@@ -161,7 +142,7 @@ async function mainPrompt() {
                 "View all employees",
                 "View all departments",
                 "View all employees by department",
-                "View all roles", 
+                "View all roles",
                 "Add department",
                 "Add employee",
                 "Add role",
