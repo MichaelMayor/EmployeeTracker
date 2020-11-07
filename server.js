@@ -5,8 +5,8 @@ let consoleTable = require("console.table");
 const db = new Database({
     host: "localhost",
     port: 3306,
-    user: "root",
-    password: "M4ssms3ff3ct!",
+    user: "test_user",
+    password: "password",
     database: "employeeTables"
 });
 
